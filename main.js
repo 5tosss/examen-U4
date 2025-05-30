@@ -54,6 +54,13 @@ function iniciarEscenario() {
                 child.receiveShadow = true;
             }
         });
+
+        const nodoCamara = new THREE.Object3D();
+        nodoCamara.position.set(0, 160, 0); // Altura ojos
+        modelo.add(nodoCamara);
+        nodoCamara.add(camara);
+
+escenario.add(modelo);
         modelo.add(camara);
         escenario.add(modelo);
 
@@ -179,26 +186,28 @@ function animarEscena() {
     if (mezclador) mezclador.update(delta);
 
     const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
-    if (gamepads.length > 0) {
-        const gamepad = gamepads[0];
-        if (gamepad && gamepad.axes.length >= 4) {
-            const ejeX = gamepad.axes[2];
-            const ejeY = gamepad.axes[3];
-            const velocidad = 150 * delta;
-            const direccion = new THREE.Vector3(ejeX, 0, ejeY).multiplyScalar(velocidad);
-            const direccionGlobal = direccion.applyQuaternion(camara.quaternion);
-            direccionGlobal.y = 0;
-            if (!verificarColision(modelo.position.clone().add(direccionGlobal))) {
-                modelo.position.add(direccionGlobal);
-            }
-            if (ejeX !== 0 || ejeY !== 0) {
-                modelo.lookAt(modelo.position.clone().add(direccionGlobal));
-                if (animacionActiva !== animaciones.walk) cambiarAnimacion(animaciones.walk);
-            } else {
-                if (animacionActiva !== animaciones.idle) cambiarAnimacion(animaciones.idle);
-            }
-        }
+    const controlador = Array.from(gamepads).find(g => g && (g.hand === 'left' || g.hand === 'right'));
+
+    if (controlador && controlador.axes.length >= 2) {
+    const ejeX = controlador.axes[2] || 0;
+    const ejeY = controlador.axes[3] || 0;
+    const velocidad = 150 * delta;
+    const direccion = new THREE.Vector3(ejeX, 0, ejeY).multiplyScalar(velocidad);
+    const direccionGlobal = direccion.applyQuaternion(camara.quaternion);
+    direccionGlobal.y = 0;
+    
+    if (!verificarColision(modelo.position.clone().add(direccionGlobal))) {
+        modelo.position.add(direccionGlobal);
     }
+    
+    if (ejeX !== 0 || ejeY !== 0) {
+        modelo.lookAt(modelo.position.clone().add(direccionGlobal));
+        if (animacionActiva !== animaciones.walk) cambiarAnimacion(animaciones.walk);
+    } else {
+        if (animacionActiva !== animaciones.idle) cambiarAnimacion(animaciones.idle);
+    }
+}
+
 
     renderizador.render(escenario, camara);
     estadisticas.update();
