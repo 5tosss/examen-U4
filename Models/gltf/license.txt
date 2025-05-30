@@ -1,0 +1,11 @@
+Model Information:
+* title:	Lakeside - Exterior Scene
+* source:	https://sketchfab.com/3d-models/lakeside-exterior-scene-07dfe01fb78c441db081646ff4c1d9e0
+* author:	Aurélien Martel (https://sketchfab.com/aurelien_martel)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Lakeside - Exterior Scene" (https://sketchfab.com/3d-models/lakeside-exterior-scene-07dfe01fb78c441db081646ff4c1d9e0) by Aurélien Martel (https://sketchfab.com/aurelien_martel) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
