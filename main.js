@@ -152,11 +152,6 @@ function crearCubosColisionablesFBX(rutaModelo, escenario, objetosColisionables)
     });
 }
 
-function ajustarVentana() {
-    camara.aspect = window.innerWidth / window.innerHeight;
-    camara.updateProjectionMatrix();
-    renderizador.setSize(window.innerWidth, window.innerHeight);
-}
 
 function cambiarAnimacion(nuevaAnimacion) {
     if (animacionActiva !== nuevaAnimacion) {
@@ -258,65 +253,4 @@ function gestionarAnimacion() {
             cambiarAnimacion(animaciones.idle);
         }
     }
-}
-
-function cambiarAnimacion(nuevaAnimacion) {
-    if (animacionActiva !== nuevaAnimacion) {
-        animacionAnterior = animacionActiva;
-        animacionActiva = nuevaAnimacion;
-
-        animacionAnterior.fadeOut(0.5);
-        animacionActiva.reset().fadeIn(0.5).play();
-    }
-}
-
-function animarEscena() {
-    requestAnimationFrame(animarEscena);
-
-    const delta = cronometro.getDelta();
-    const distanciaMovimiento = velocidadMovimiento * delta;
-
-    if (mezclador) mezclador.update(delta);
-
-    let moverX = 0;
-    let moverZ = 0;
-
-    if (teclado['w']) {
-        moverZ = -distanciaMovimiento;
-    }
-    if (teclado['s']) {
-        moverZ = distanciaMovimiento;
-    }
-    if (teclado['a']) {
-        moverX = -distanciaMovimiento;
-    }
-    if (teclado['d']) {
-        moverX = distanciaMovimiento;
-    }
-
-    if (moverX !== 0 || moverZ !== 0) {
-        const vectorMovimiento = new THREE.Vector3(moverX, 0, moverZ);
-        const direccion = vectorMovimiento.clone().applyQuaternion(camara.quaternion);
-        direccion.y = 0;
-        modelo.lookAt(modelo.position.clone().add(direccion));
-        if (!verificarColision(modelo.position.clone().add(direccion))) {
-            modelo.position.add(direccion);
-        }
-    }
-
-    renderizador.render(escenario, camara);
-    estadisticas.update();
-}
-
-function verificarColision(nuevaPosicion) {
-    const caja = new THREE.Box3().setFromObject(modelo);
-    const boundingBoxModelo = caja.clone().translate(nuevaPosicion.sub(modelo.position));
-
-    for (let i = 0; i < objetosColisionables.length; i++) {
-        const boundingBoxObjeto = new THREE.Box3().setFromObject(objetosColisionables[i]);
-        if (boundingBoxModelo.intersectsBox(boundingBoxObjeto)) {
-            return true;
-        }
-    }
-    return false;
 }
